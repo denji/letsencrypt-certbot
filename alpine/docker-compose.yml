@@ -1,0 +1,7 @@
+version: '2.1'
+
+services:
+  certbot:
+    image: denji/letsencrypt-certbot:alpine
+    ports:
+      - "8080:80"
