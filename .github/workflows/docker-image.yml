@@ -1,0 +1,148 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'README.md'
+
+jobs:
+  build-host-amd64v4:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v4
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push (Linux x86_64-v4)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./
+          file: Dockerfile
+          push: true
+          tags: docker.io/denji/letsencrypt-certbot:alpine
+          cache-from: type=registry,ref=docker.io/denji/letsencrypt-certbot:alpine
+          cache-to: type=inline
+  build-qemu-arm64:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push (Linux AArch64 - ARMv8)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./
+          file: Dockerfile
+          platforms: linux/arm64
+          push: true
+          tags: docker.io/denji/letsencrypt-certbot:aarch64-alpine
+          cache-from: type=registry,ref=docker.io/denji/letsencrypt-certbot:aarch64-alpine
+          cache-to: type=inline
+  build-qemu-armv7:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push (Linux ARMv7 - 32-bit)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./
+          file: Dockerfile
+          platforms: linux/arm/v7
+          push: true
+          tags: docker.io/denji/letsencrypt-certbot:armv7-alpine
+          cache-from: type=registry,ref=docker.io/denji/letsencrypt-certbot:armv7-alpine
+          cache-to: type=inline
+  build-qemu-armhf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push (Linux armhf - 32-bit hard-float ABI ARMv6)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./
+          file: Dockerfile
+          platforms: linux/arm/v6
+          push: true
+          tags: docker.io/denji/letsencrypt-certbot:armhf-alpine
+          cache-from: type=registry,ref=docker.io/denji/letsencrypt-certbot:armhf-alpine
+          cache-to: type=inline
+  build-qemu-s390x:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push (Linux s390x - IBM System Z Based)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./
+          file: Dockerfile
+          platforms: linux/s390x
+          push: true
+          tags: docker.io/denji/letsencrypt-certbot:s390x-alpine
+          cache-from: type=registry,ref=docker.io/denji/letsencrypt-certbot:s390x-alpine
+          cache-to: type=inline
+  build-qemu-ppc64le:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push (Linux ppc64le - 64-bit PowerPC little-endian)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./
+          file: Dockerfile
+          platforms: linux/ppc64le
+          push: true
+          tags: docker.io/denji/letsencrypt-certbot:ppc64le-alpine
+          cache-from: type=registry,ref=docker.io/denji/letsencrypt-certbot:ppc64le-alpine
+          cache-to: type=inline
